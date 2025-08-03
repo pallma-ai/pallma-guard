@@ -13,17 +13,13 @@ help:
 	@echo "  check - Run linting and format checks"
 	@echo "  check-fix - Run linting and formatting with auto-fix"
 
-.PHONY: install-all
-install-all:
-	uv sync --group all
-
-.PHONY: install-cli
-install-cli:
-	uv sync --group cli
+.PHONY: install
+install:
+	uv sync
 
 .PHONY: install-sdk
 install-sdk:
-	uv sync --group sdk
+	uv sync --extra sdk
 
 .PHONY: install-dev
 install-dev:
