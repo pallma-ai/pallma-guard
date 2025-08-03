@@ -142,7 +142,7 @@ def display_stats():
         if result.returncode != 0:
             typer.echo("❌ Error: Kafka is not running. Please start the services first with 'pallma start'")
             raise typer.Exit(1)
-    except Exception as e:
+    except Exception:
         typer.echo("❌ Error: Cannot connect to Kafka. Make sure the services are running.")
         typer.echo("💡 Run 'pallma start' to start all services")
         raise typer.Exit(1)
