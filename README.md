@@ -25,6 +25,11 @@ Before running pallma, ensure you have the following installed:
    ```bash
    make install-all
    ```
+3. **Activate the virtual environment:**
+   
+   ```bash
+   source .venv/bin/activate
+   ```
 
 ## Configuration
 
