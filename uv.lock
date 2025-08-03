@@ -1307,36 +1307,33 @@ wheels = [
 name = "pallma"
 version = "0.0.1"
 source = { editable = "." }
+dependencies = [
+    { name = "typer" },
+]
+
+[package.optional-dependencies]
+sdk = [
+    { name = "traceloop-sdk" },
+]
 
 [package.dev-dependencies]
-all = [
-    { name = "traceloop-sdk" },
-    { name = "typer" },
-]
-cli = [
-    { name = "typer" },
-]
 dev = [
     { name = "ruff" },
 ]
 lint = [
     { name = "ruff" },
 ]
-sdk = [
-    { name = "traceloop-sdk" },
-]
 
 [package.metadata]
-
-[package.metadata.requires-dev]
-all = [
-    { name = "traceloop-sdk", specifier = ">=0.43.1" },
+requires-dist = [
+    { name = "traceloop-sdk", marker = "extra == 'sdk'", specifier = ">=0.43.1" },
     { name = "typer", specifier = ">=0.16.0" },
 ]
-cli = [{ name = "typer", specifier = ">=0.16.0" }]
+provides-extras = ["sdk"]
+
+[package.metadata.requires-dev]
 dev = [{ name = "ruff", specifier = ">=0.12.7" }]
 lint = [{ name = "ruff", specifier = ">=0.12.7" }]
-sdk = [{ name = "traceloop-sdk", specifier = ">=0.43.1" }]
 test = []
 
 [[package]]
