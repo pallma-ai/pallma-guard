@@ -1,7 +1,9 @@
 import os
 import threading
+
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
 
 class ModelRunner:
     def __init__(self):
@@ -10,7 +12,7 @@ class ModelRunner:
         self.model = None
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        
+
         thread = threading.Thread(target=self._load_model)
         thread.start()
 
@@ -21,13 +23,11 @@ class ModelRunner:
             print(f"Loading model {model_name}...")
 
             self.model = AutoModelForSequenceClassification.from_pretrained(
-                model_name,
-                use_auth_token=token
+                model_name, use_auth_token=token
             ).to(self.device)
-            
+
             self.tokenizer = AutoTokenizer.from_pretrained(
-                model_name,
-                use_auth_token=token
+                model_name, use_auth_token=token
             )
             self.model.eval()
             print("Model loaded.")
@@ -38,10 +38,7 @@ class ModelRunner:
 
     def run(self, texts):
         encoded = self.tokenizer(
-            texts,
-            return_tensors="pt",
-            padding=True,
-            truncation=True
+            texts, return_tensors="pt", padding=True, truncation=True
         )
         encoded = {k: v.to(self.device) for k, v in encoded.items()}
         with torch.no_grad():
