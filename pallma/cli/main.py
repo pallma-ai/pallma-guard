@@ -1,7 +1,6 @@
 import os
 import subprocess
 import sys
-
 import typer
 
 app = typer.Typer()
