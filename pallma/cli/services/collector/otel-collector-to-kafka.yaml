@@ -1,0 +1,46 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  otlphttp:
+    endpoint: "http://host.docker.internal:8000"
+    tls:
+      insecure: true
+
+  kafka/traces:
+    brokers: ["pallma-kafka:9092"]
+    topic: "otel-traces"
+    encoding: otlp_proto
+    protocol_version: 2.0.0
+
+  kafka/metrics:
+    brokers: ["pallma-kafka:9092"]
+    topic: "otel-metrics"
+    encoding: otlp_proto
+    protocol_version: 2.0.0
+
+# processors:
+#   batch:
+#     send_batch_size: 8192
+#     timeout: 5s
+
+#   memory_limiter:
+#     check_interval: 1s
+#     limit_mib: 4000
+#     spike_limit_mib: 500
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      # processors: [memory_limiter, batch]
+      exporters: [kafka/traces]
+    metrics:
+      receivers: [otlp]
+      # processors: [memory_limiter, batch]
+      exporters: [kafka/metrics]

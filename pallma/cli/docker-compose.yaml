@@ -1,0 +1,80 @@
+# docker-compose.yml
+services:
+  pallma-zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: pallma-zookeeper
+    networks:
+      - pallma-network
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  pallma-kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: pallma-kafka
+    networks:
+      - pallma-network
+    ports:
+      - "9092:9092"
+    depends_on:
+      - pallma-zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'pallma-zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://pallma-kafka:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  pallma-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: pallma-collector
+    networks:
+      - default
+      - pallma-network
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - ${PALLMA_CLI_ROOT}/services/collector/otel-collector-to-kafka.yaml:/etc/otelcol/config.yaml
+    depends_on:
+      pallma-kafka:
+        condition: service_healthy
+      pallma-predictor:
+        condition: service_healthy
+
+  pallma-processor:
+    build: ${PALLMA_CLI_ROOT}/services/processor
+    image: pallma-processor:latest
+    container_name: pallma-processor
+    networks:
+      - pallma-network
+    depends_on:
+      pallma-kafka:
+        condition: service_healthy
+    
+  pallma-predictor:
+    build: ${PALLMA_CLI_ROOT}/services/predictor
+    image: pallma-predictor:latest
+    container_name: pallma-predictor
+    networks:
+      - default
+      - pallma-network
+    environment:
+      HUGGINGFACE_HUB_TOKEN: ${HUGGINGFACE_HUB_TOKEN}
+    depends_on:
+      - pallma-processor
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 30
+
+networks:
+  pallma-network:
+    name: pallma-network
+    external: true
