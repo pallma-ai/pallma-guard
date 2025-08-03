@@ -1,10 +1,12 @@
 [project]
-name = "pallma"
+name = "pallma-guard"
 version = "0.0.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "typer>=0.16.0",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -76,18 +78,12 @@ line-ending = "auto"
 [tool.ruff.lint.isort]
 known-first-party = ["pallma"]
 
-[dependency-groups]
-all = [
-    {include-group = "cli"},
-    {include-group = "sdk"}
-]
-cli = [
-    "typer>=0.16.0",
-]
+[project.optional-dependencies]
 sdk = [
     "traceloop-sdk>=0.43.1",
 ]
 
+[dependency-groups]
 dev = [
   {include-group = "lint"},
   {include-group = "test"}
