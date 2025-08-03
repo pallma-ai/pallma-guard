@@ -13,7 +13,7 @@ Before running pallma, ensure you have the following installed:
 
 ## Requesting access to the model
 
-1. Request access to the [model](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M) on HuggingFace. Log in to HuggingFace (create an account if you don't have one). You’ll see a form at the top - fill it out and wait for access, this might take some time.
+1. Request access to the [model](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M) on HuggingFace. [Log in](https://huggingface.co/login) to HuggingFace (create an account if you don't have one). You’ll see a form at the top of the [model page](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M) - fill it out and wait for access, this might take some time.
 ![hf-acccess](assets/images/hf-access.png)
 
 2. Create a token to download the model. Create one in the [tokens section of your HuggingFace account](https://huggingface.co/settings/tokens). Read-only token should be enough:
