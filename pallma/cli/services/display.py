@@ -162,4 +162,4 @@ def display_stats():
 
 
 if __name__ == "__main__":
-    display_stats() 
+    display_stats()
