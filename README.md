@@ -9,7 +9,15 @@ Before running pallma, ensure you have the following installed:
 - **Python 3.12+**
 - **Docker and Docker Compose**
 - **uv** (Python package manager)
-- **Hugging Face Hub Token** (for the predictor service)
+- **Hugging Face Hub Token** (for the predictor service), with permission to access the [model on HuggingFace](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M).
+
+## Requesting access to the model
+
+1. Request access to the [model](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M) on HuggingFace. Log in to HuggingFace (create an account if you don't have one). You’ll see a form at the top - fill it out and wait for access, this might take some time.
+![hf-acccess](assets/images/hf-access.png)
+
+2. Create a token to download the model. Create one in the [tokens section of your HuggingFace account](https://huggingface.co/settings/tokens). Read-only token should be enough:
+![hf-token](assets/images/generate-token.png)
 
 ## Installation
 
@@ -32,6 +40,7 @@ Before running pallma, ensure you have the following installed:
    ```
 
 ## Configuration
+
 
 ### Environment Variables
 
