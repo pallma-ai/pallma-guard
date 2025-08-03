@@ -1,6 +1,7 @@
 import typer
 import subprocess
 import os
+import sys
 
 app = typer.Typer()
 
@@ -41,7 +42,7 @@ def start():
 def stop():
     """Stop all services using docker-compose"""
     # Get the directory containing docker-compose.yml
-    compose_dir = os.path.dirname(os.path.dirname(__file__))
+    compose_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "cli")
     
     # Set environment variable for the CLI root directory
     env = os.environ.copy()
@@ -63,6 +64,25 @@ def stop():
         typer.echo("Network 'pallma-network' could not be removed (may be in use or not exist).")
     
     typer.echo("All services have been stopped.")
+
+
+@app.command()
+def display():
+    """Display real-time statistics from Kafka messages"""
+    
+    # Add the CLI directory to the path so we can import the display module
+    cli_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "cli")
+    sys.path.insert(0, cli_dir)
+    
+    try:
+        from pallma.cli.services.display import display_stats
+        display_stats()
+    except ImportError as e:
+        typer.echo(f"❌ Error importing display module: {e}")
+        raise typer.Exit(1)
+    except Exception as e:
+        typer.echo(f"❌ Error running display: {e}")
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

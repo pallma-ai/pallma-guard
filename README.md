@@ -48,7 +48,15 @@ pallma start
 
 # Stop all services
 pallma stop
+
+# Display real-time statistics
+pallma display
 ```
+
+The display command shows real-time statistics including:
+- Total number of messages
+- Percentage of allow/block decisions
+- Real-time updates as messages arrive
 
 ## Services
 
