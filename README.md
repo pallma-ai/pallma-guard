@@ -51,11 +51,11 @@ The project includes a CLI tool for easy management:
 # Start all services
 pallma start
 
-# Stop all services
-pallma stop
-
 # Display real-time statistics
 pallma display
+
+# Stop all services
+pallma stop
 ```
 
 The display command shows real-time statistics including:
