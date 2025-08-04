@@ -19,7 +19,7 @@ The Security Observability Layer for AI Agents.
 
 Pallma is a security observability platform designed specifically for the era of AI agents and LLM-powered applications. As agents execute complex tasks, they create a new, dynamic attack surface vulnerable to threats like prompt injection, data leakage, and insecure tool usage.
 
-Pallma leverages **OpenTelemetry** to trace every step of an agent's decision-making process—its "chain-of-thought." These traces are then fed into our open-source, purpose-built **open-source** ML models to detect, analyze, and block threats in real-time, giving you unprecedented visibility and control over your AI systems.
+Pallma leverages **OpenTelemetry** to trace every step of an agent's decision-making process—its "chain-of-thought." These traces are then fed into purpose-built **open-source** ML models to detect, analyze, and block threats in real-time, giving you unprecedented visibility and control over your AI systems.
 
 ## ✨ Key Features
 
