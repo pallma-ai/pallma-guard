@@ -8,7 +8,7 @@
       <img src="https://github.com/pallma-ai/pallma-guard/actions/workflows/ci.yml/badge.svg">
    </a>
    <a href="https://github.com/traceloop/openllmetry/blob/main/LICENSE">
-      <img src="https://img.shields.io/badge/license-Apache 2.0-blue.svg" alt="OpenLLMetry is released under the Apache-2.0 License">
+      <img src="https://img.shields.io/badge/license-Apache 2.0-blue.svg" alt="Pallma-Guard is released under the Apache-2.0 License">
   </a>
 </h4>
 
