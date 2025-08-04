@@ -1,6 +1,42 @@
-# pallma
+<h1 align="center">Pallma Guard</h1>
+<p align="center">
+  <p align="center"><strong>The Security Observability Layer for AI Agents.</strong></p>
+</p>
 
-Pallma is an advanced AI-powered security monitoring platform that leverages OpenTelemetry and state-of-the-art machine learning models to detect, analyze, and predict potential security threats in real-time. By combining distributed tracing with AI capabilities, it provides comprehensive security insights and proactive threat detection for modern applications and infrastructure.
+<h4 align="center">
+   <a href="https://github.com/pallma-ai/pallma-guard/actions/workflows/ci.yml">
+      <img src="https://github.com/pallma-ai/pallma-guard/actions/workflows/ci.yml/badge.svg">
+   </a>
+   <a href="https://github.com/traceloop/openllmetry/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/license-Apache 2.0-blue.svg" alt="OpenLLMetry is released under the Apache-2.0 License">
+  </a>
+</h4>
+
+
+# pallma-guard
+
+The Security Observability Layer for AI Agents.
+
+Pallma is a security observability platform designed specifically for the era of AI agents and LLM-powered applications. As agents execute complex tasks, they create a new, dynamic attack surface vulnerable to threats like prompt injection, data leakage, and insecure tool usage.
+
+Pallma leverages **OpenTelemetry** to trace every step of an agent's decision-making process—its "chain-of-thought." These traces are then fed into our open-source, purpose-built **open-source** ML models to detect, analyze, and block threats in real-time, giving you unprecedented visibility and control over your AI systems.
+
+## ✨ Key Features
+
+* 🛡️ **Real-time Threat Detection:** Identify malicious prompts, data exfiltration attempts, and anomalous agent behavior as it happens.
+* 🔎 **LLM-Specific Analysis:** Go beyond simple text matching. Understand the context of LLM interactions to detect nuanced threats.
+* 🔓 **Transparent & Auditable Security Models:** No black boxes. Our core ML models are fully open-source. Inspect the logic, contribute improvements, or fine-tune them.
+* ⚙️ **Minimal Configuration:** Get started in minutes. Pallma is designed to work out-of-the-box with no complex rule-writing, providing immediate value right after installation.
+* 🔌 **OpenTelemetry Native:** Seamlessly integrate with your existing observability stack. If you use OTel, you can use Pallma.
+* 🤖 **Framework Agnostic:** Works with LangChain, LlamaIndex, or your own custom agent frameworks.
+
+
+## 🤔 Why Pallma?
+
+Traditional security tools (WAFs, APMs) are blind to the internal logic of AI agents. They see an API call, but not the malicious prompt that caused it.
+
+Even newer AI security solutions can operate as a "black box," asking you to trust their proprietary logic. **Pallma is different.** Our commitment to open-source extends to our core security models. This transparency allows for community auditing, eliminates vendor lock-in, and empowers you to understand exactly how your agents are being protected.
+
 
 ## Prerequisites
 
