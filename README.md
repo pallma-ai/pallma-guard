@@ -28,7 +28,7 @@ Pallma-Guard leverages **OpenTelemetry** to trace every step of an agent's decis
 * 🔓 **Transparent & Auditable Security Models:** No black boxes. Our core ML models are fully open-source. Inspect the logic, contribute improvements, or fine-tune them.
 * ⚙️ **Minimal Configuration:** Get started in minutes. Pallma-Guard is designed to work out-of-the-box with no complex rule-writing, providing immediate value right after installation.
 * 🔌 **OpenTelemetry Native:** Seamlessly integrate with your existing observability stack. If you use OTel, you can use Pallma-Guard.
-* 🤖 **Framework Agnostic:** Works with LangChain, LlamaIndex, or your own custom agent frameworks.
+* 🤖 **Framework Agnostic:** Works with LangChain, LangGraph, LlamaIndex, Haystack, LiteLLM, CrewAI.
 
 
 ## 🤔 Why Pallma-Guard?
