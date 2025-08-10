@@ -24,6 +24,11 @@ PRODUCE_TOPIC = "output-topic"
 GROUP_ID = "otel-traces-group"
 PREDICTOR_HOST = "http://pallma-predictor:8000"
 
+# Configuration constants
+MAX_CONCURRENT_TASKS = 10
+MAX_TRACES_IN_MEMORY = 10000
+HTTP_TIMEOUT_SECONDS = 30
+
 
 # Setup structured JSON logging
 logger = logging.getLogger("llm-scanner")
@@ -41,37 +46,50 @@ class TraceProcessor:
     Processes OpenTelemetry traces to extract user prompts based on a key pattern.
     """
 
-    def __init__(self):
+    def __init__(self, max_traces=10000):
         self.traces = {}
+        self.max_traces = max_traces
+        self._lock = asyncio.Lock()
 
     def _get_attribute_value(self, attribute):
-        for key in attribute:
-            if key.endswith("Value"):
+        for key in ["stringValue", "intValue", "doubleValue", "boolValue"]:
+            if key in attribute:
                 return attribute[key]
         return None
 
-    def process_message(self, message):
+    async def process_message(self, message):
         trace_id = message.get("trace_id")
         if not trace_id:
             return
 
-        if trace_id not in self.traces:
-            self.traces[trace_id] = {"trace_id": trace_id, "user_inputs": []}
+        async with self._lock:
+            if trace_id not in self.traces:
+                # Clean up old traces if we exceed the limit
+                if len(self.traces) >= self.max_traces:
+                    # Remove oldest traces (simple FIFO approach)
+                    oldest_traces = list(self.traces.keys())[:len(self.traces) // 2]
+                    for old_trace_id in oldest_traces:
+                        del self.traces[old_trace_id]
+                    logger.info(f"Cleaned up {len(oldest_traces)} old traces")
 
-        attributes = message.get("attributes", [])
+                self.traces[trace_id] = {"trace_id": trace_id, "user_inputs": []}
 
-        for attr in attributes:
-            key = attr.get("key", "")
-            match = re.match(r"gen_ai\.prompt\.(\d+)\.role", key)
-            if match:
-                value = self._get_attribute_value(attr.get("value", {}))
-                if value == "user":
-                    user_prompt_index = match.group(1)
-                    content_key_to_find = f"gen_ai.prompt.{user_prompt_index}.content"
-                    for content_attr in attributes:
-                        if content_attr.get("key") == content_key_to_find:
+            attributes = message.get("attributes", [])
+            
+            # Create a lookup map for attributes to avoid nested loops
+            attr_map = {attr.get("key", ""): attr for attr in attributes}
+
+            for key, attr in attr_map.items():
+                match = re.match(r"gen_ai\.prompt\.(\d+)\.role", key)
+                if match:
+                    value = self._get_attribute_value(attr.get("value", {}))
+                    if value == "user":
+                        user_prompt_index = match.group(1)
+                        content_key = f"gen_ai.prompt.{user_prompt_index}.content"
+                        
+                        if content_key in attr_map:
                             user_prompt_content = self._get_attribute_value(
-                                content_attr.get("value", {})
+                                attr_map[content_key].get("value", {})
                             )
                             if (
                                 user_prompt_content
@@ -81,12 +99,14 @@ class TraceProcessor:
                                 self.traces[trace_id]["user_inputs"].append(
                                     user_prompt_content
                                 )
-                            break
 
-    def get_processed_trace(self, trace_id):
-        trace = self.traces.get(trace_id)
-        if trace and trace.get("user_inputs"):
-            return trace
+    async def get_processed_trace(self, trace_id):
+        async with self._lock:
+            trace = self.traces.get(trace_id)
+            if trace and trace.get("user_inputs"):
+                # Remove the trace after processing to prevent memory leaks
+                del self.traces[trace_id]
+                return trace
         return None
 
 
@@ -120,16 +140,16 @@ def otlp_trace_to_dict(otlp_trace_request: ExportTraceServiceRequest):
     wait=wait_exponential(multiplier=1, min=2, max=10),
     retry=retry_if_exception_type(aiohttp.ClientError),
 )
-async def call_http_service(payload):
+async def call_http_service(session, payload):
     logger.info(f"Sending payload to HTTP service: {json.dumps(payload)}")
     # TODO: Implement the endpoint
-    async with aiohttp.ClientSession() as session:
-        async with session.post(f"{PREDICTOR_HOST}/filter", json=payload) as resp:
-            if resp.status != 200:
-                logger.error(f"HTTP service returned error: {resp.status}")
-                raise aiohttp.ClientError(f"HTTP {resp.status}")
-            logger.info("Successfully sent payload to HTTP service.")
-            return await resp.json()
+    timeout = aiohttp.ClientTimeout(total=HTTP_TIMEOUT_SECONDS)
+    async with session.post(f"{PREDICTOR_HOST}/filter", json=payload, timeout=timeout) as resp:
+        if resp.status != 200:
+            logger.error(f"HTTP service returned error: {resp.status}")
+            raise aiohttp.ClientError(f"HTTP {resp.status}")
+        logger.info("Successfully sent payload to HTTP service.")
+        return await resp.json()
 
 
 @retry(
@@ -160,34 +180,41 @@ async def consume():
         enable_auto_commit=False,
     )
     producer = AIOKafkaProducer(bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS)
+    session = aiohttp.ClientSession()
 
-    trace_processor = TraceProcessor()
+    trace_processor = TraceProcessor(max_traces=MAX_TRACES_IN_MEMORY)
 
     await consumer.start()
     await producer.start()
 
-    semaphore = asyncio.Semaphore(10)
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_TASKS)
     tasks = set()
     shutting_down = asyncio.Event()
 
     async def process_message_batch(msg):
         async with semaphore:
-            otlp_req = ExportTraceServiceRequest()
-            otlp_req.ParseFromString(msg.value)
+            try:
+                otlp_req = ExportTraceServiceRequest()
+                otlp_req.ParseFromString(msg.value)
+            except Exception as e:
+                logger.error(f"Failed to parse protobuf message: {e}")
+                # Still commit to avoid reprocessing the same message
+                await consumer.commit()
+                return
 
             spans = otlp_trace_to_dict(otlp_req)
             processed_trace_ids = set()
 
             for span in spans:
-                trace_processor.process_message(span)
+                await trace_processor.process_message(span)
                 processed_trace_ids.add(span.get("trace_id"))
 
             for trace_id in processed_trace_ids:
-                processed_trace = trace_processor.get_processed_trace(trace_id)
+                processed_trace = await trace_processor.get_processed_trace(trace_id)
                 if processed_trace:
                     try:
                         # Send the processed trace data to the HTTP service
-                        response = await call_http_service(processed_trace)
+                        response = await call_http_service(session, processed_trace)
                         # Produce the response to another Kafka topic
                         await produce_message(producer, PRODUCE_TOPIC, response)
 
@@ -204,6 +231,7 @@ async def consume():
         await asyncio.gather(*tasks, return_exceptions=True)
         await consumer.stop()
         await producer.stop()
+        await session.close()
         logger.info("Shutdown complete.")
 
     loop = asyncio.get_running_loop()
