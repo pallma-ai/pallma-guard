@@ -64,8 +64,6 @@ services:
     networks:
       - default
       - pallma-network
-    environment:
-      HUGGINGFACE_HUB_TOKEN: ${HUGGINGFACE_HUB_TOKEN}
     depends_on:
       - pallma-processor
     healthcheck:
