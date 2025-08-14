@@ -86,7 +86,8 @@ sdk = [
 [dependency-groups]
 dev = [
   {include-group = "lint"},
-  {include-group = "test"}
+  {include-group = "test"},
+  "bump2version>=1.0.1",
 ]
 lint = [
     "ruff>=0.12.7",
