@@ -17,17 +17,16 @@ class ModelRunner:
         thread.start()
 
     def _load_model(self):
-        model_name = "meta-llama/Llama-Prompt-Guard-2-22M"
-        token = os.getenv("HUGGINGFACE_HUB_TOKEN")
+        model_name = "pallma-ai/pallma-guard"
         try:
             print(f"Loading model {model_name}...")
 
             self.model = AutoModelForSequenceClassification.from_pretrained(
-                model_name, use_auth_token=token
+                model_name
             ).to(self.device)
 
             self.tokenizer = AutoTokenizer.from_pretrained(
-                model_name, use_auth_token=token
+                "distilbert/distilbert-base-uncased"
             )
             self.model.eval()
             print("Model loaded.")

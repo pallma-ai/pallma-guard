@@ -19,7 +19,7 @@ The Security Observability Layer for AI Agents.
 
 Pallma-Guard is a security observability platform designed specifically for the era of AI agents and LLM-powered applications. As agents execute complex tasks, they create a new, dynamic attack surface vulnerable to threats like prompt injection, data leakage, and insecure tool usage.
 
-Pallma-Guard leverages **OpenTelemetry** to trace every step of an agent's decision-making process—its "chain-of-thought." These traces are then fed into purpose-built **open-source** ML models to detect, analyze, and block threats in real-time, giving you unprecedented visibility and control over your AI systems.
+Pallma-Guard leverages **OpenTelemetry** to trace every step of an agent's decision-making process—its "chain-of-thought." These traces are then fed into our purpose-built **open-source** ML models to detect, analyze, and block threats in real-time, giving you unprecedented visibility and control over your AI systems.
 
 ## ✨ Key Features
 
@@ -45,15 +45,6 @@ Before running pallma, ensure you have the following installed:
 - **Python 3.12+**
 - **Docker and Docker Compose**
 - **uv** (Python package manager)
-- **Hugging Face Hub Token** (for the predictor service), with permission to access the [model on HuggingFace](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M).
-
-## Requesting access to the model
-
-1. Request access to the [model](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M) on HuggingFace. [Log in](https://huggingface.co/login) to HuggingFace (create an account if you don't have one). You’ll see a form at the top of the [model page](https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-22M) - fill it out and wait for access, this might take some time.
-![hf-acccess](assets/images/hf-access.png)
-
-2. Create a token to download the model. Create one in the [tokens section of your HuggingFace account](https://huggingface.co/settings/tokens). Read-only token should be enough:
-![hf-token](assets/images/generate-token.png)
 
 ## Installation
 
@@ -74,19 +65,6 @@ Before running pallma, ensure you have the following installed:
    ```bash
    source .venv/bin/activate
    ```
-
-## Configuration
-
-
-### Environment Variables
-
-Set the following environment variable for the predictor service:
-
-```bash
-export HUGGINGFACE_HUB_TOKEN="your_huggingface_token_here"
-```
-
-You can get a Hugging Face token from [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
 
 ## Running the Application
 
@@ -137,9 +115,8 @@ make install-sdk
 ## Troubleshooting
 
 1. **Network issues**: Ensure the `pallma-network` Docker network exists
-2. **Hugging Face token**: Make sure `HUGGINGFACE_HUB_TOKEN` is set
-3. **Port conflicts**: Check if ports 2181, 9092, 4317, 4318 are available
-4. **Service health**: Use `docker-compose ps` to check service status
+2. **Port conflicts**: Check if ports 2181, 9092, 4317, 4318 are available
+3. **Service health**: Use `docker-compose ps` to check service status
 
 ## License
 
