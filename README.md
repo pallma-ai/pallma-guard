@@ -110,6 +110,16 @@ make lint
 # Install specific dependency groups
 make install-cli
 make install-sdk
+
+# Bump version
+make bump_version version=<major|minor|patch>
+```
+### Releasing a new version
+
+After running the bump_version command, you need to push the changes and tags to the remote repository:
+
+```bash
+git push --follow-tags
 ```
 
 ## Troubleshooting
