@@ -49,3 +49,7 @@ check: lint format-check
 check-fix: lint-fix format
 	@echo "All issues fixed!"
 
+.PHONY: bump-version
+bump-version:
+	@:$(if $(version),,$(error version is not set. Run make bump-version version=patch or version=minor or version=major))
+	poetry run bump2version $(version)
