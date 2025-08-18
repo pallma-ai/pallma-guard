@@ -25,9 +25,7 @@ class ModelRunner:
                 model_name
             ).to(self.device)
 
-            self.tokenizer = AutoTokenizer.from_pretrained(
-                model_name
-            )
+            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
             self.model.eval()
             print("Model loaded.")
             self.ready = True
