@@ -26,7 +26,7 @@ class ModelRunner:
             ).to(self.device)
 
             self.tokenizer = AutoTokenizer.from_pretrained(
-                "distilbert/distilbert-base-uncased"
+                model_name
             )
             self.model.eval()
             print("Model loaded.")
