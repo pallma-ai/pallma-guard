@@ -1,8 +1,22 @@
 [project]
 name = "pallma-guard"
 version = "0.0.2"
-description = "Add your description here"
+description = "The Security Observability Layer for AI Agents"
 readme = "README.md"
+authors = [
+  { name = "Dionysis Varelas (@dvarelas)" },
+  { name = "Pavlos Mitsoulis (@pm3310)" }
+]
+license = { text = "Apache License 2.0" }
+keywords = ["LLM", "Cybersecurity", "AI Agents"]
+
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 requires-python = ">=3.12"
 dependencies = [
     "typer>=0.16.0",
