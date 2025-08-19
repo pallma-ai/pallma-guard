@@ -120,16 +120,15 @@ def otlp_trace_to_dict(otlp_trace_request: ExportTraceServiceRequest):
     wait=wait_exponential(multiplier=1, min=2, max=10),
     retry=retry_if_exception_type(aiohttp.ClientError),
 )
-async def call_http_service(payload):
+async def call_http_service(session, payload):
     logger.info(f"Sending payload to HTTP service: {json.dumps(payload)}")
     # TODO: Implement the endpoint
-    async with aiohttp.ClientSession() as session:
-        async with session.post(f"{PREDICTOR_HOST}/filter", json=payload) as resp:
-            if resp.status != 200:
-                logger.error(f"HTTP service returned error: {resp.status}")
-                raise aiohttp.ClientError(f"HTTP {resp.status}")
-            logger.info("Successfully sent payload to HTTP service.")
-            return await resp.json()
+    async with session.post(f"{PREDICTOR_HOST}/filter", json=payload) as resp:
+        if resp.status != 200:
+            logger.error(f"HTTP service returned error: {resp.status}")
+            raise aiohttp.ClientError(f"HTTP {resp.status}")
+        logger.info("Successfully sent payload to HTTP service.")
+        return await resp.json()
 
 
 @retry(
@@ -160,6 +159,7 @@ async def consume():
         enable_auto_commit=False,
     )
     producer = AIOKafkaProducer(bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS)
+    session = aiohttp.ClientSession()
 
     trace_processor = TraceProcessor()
 
@@ -187,7 +187,7 @@ async def consume():
                 if processed_trace:
                     try:
                         # Send the processed trace data to the HTTP service
-                        response = await call_http_service(processed_trace)
+                        response = await call_http_service(session, processed_trace)
                         # Produce the response to another Kafka topic
                         await produce_message(producer, PRODUCE_TOPIC, response)
 
@@ -204,6 +204,7 @@ async def consume():
         await asyncio.gather(*tasks, return_exceptions=True)
         await consumer.stop()
         await producer.stop()
+        await session.close()
         logger.info("Shutdown complete.")
 
     loop = asyncio.get_running_loop()
