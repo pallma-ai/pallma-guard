@@ -48,6 +48,20 @@ Before running pallma, ensure you have the following installed:
 
 ## Installation
 
+   **The easiest way to install pallma-guard is either by using pip or pipx,**
+
+   **pip**
+   ```bash
+   pip install pallma-guard
+   ```
+
+   **pipx**
+   ```bash
+   pipx install pallma-guard
+   ```
+
+**Manual installation**
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/pallma-ai/pallma.git
@@ -56,10 +70,16 @@ Before running pallma, ensure you have the following installed:
 
 2. **Install dependencies:**
    
-   Install all dependencies (CLI + SDK):
+   Install dependencies (CLI):
    ```bash
-   make install-all
+   make install
    ```
+
+   (Optional) Install dependencies (CLI + SDK):
+   ```
+   make install-sdk
+   ```
+
 3. **Activate the virtual environment:**
    
    ```bash
