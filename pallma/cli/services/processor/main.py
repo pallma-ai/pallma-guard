@@ -26,7 +26,7 @@ PREDICTOR_HOST = "http://pallma-predictor:8000"
 
 
 # Setup structured JSON logging
-logger = logging.getLogger("llm-scanner")
+logger = logging.getLogger("pallma-guard-processor")
 handler = logging.StreamHandler(sys.stdout)
 formatter = logging.Formatter(
     '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}'
