@@ -122,7 +122,6 @@ def otlp_trace_to_dict(otlp_trace_request: ExportTraceServiceRequest):
 )
 async def call_http_service(session, payload):
     logger.info(f"Sending payload to HTTP service: {json.dumps(payload)}")
-    # TODO: Implement the endpoint
     async with session.post(f"{PREDICTOR_HOST}/filter", json=payload) as resp:
         if resp.status != 200:
             logger.error(f"HTTP service returned error: {resp.status}")
