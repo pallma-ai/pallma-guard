@@ -10,6 +10,12 @@
    <a href="https://github.com/pallma-ai/pallma-guard/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/license-Apache 2.0-blue.svg" alt="Pallma-Guard is released under the Apache-2.0 License">
   </a>
+  <a>
+      <img src="https://img.shields.io/badge/python-3.12+-blue.svg" alt="Minimum Python version">
+  </a>
+  <a>
+      <img src="https://img.shields.io/badge/status-prototype-orange.svg" alt="Project status">
+  </a>
 </h4>
 
 
