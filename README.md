@@ -7,8 +7,14 @@
    <a href="https://github.com/pallma-ai/pallma-guard/actions/workflows/ci.yml">
       <img src="https://github.com/pallma-ai/pallma-guard/actions/workflows/ci.yml/badge.svg">
    </a>
-   <a href="https://github.com/traceloop/openllmetry/blob/main/LICENSE">
+   <a href="https://github.com/pallma-ai/pallma-guard/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/license-Apache 2.0-blue.svg" alt="Pallma-Guard is released under the Apache-2.0 License">
+  </a>
+  <a>
+      <img src="https://img.shields.io/badge/python-3.12+-blue.svg" alt="Minimum Python version">
+  </a>
+  <a>
+      <img src="https://img.shields.io/badge/status-prototype-orange.svg" alt="Project status">
   </a>
 </h4>
 
@@ -48,6 +54,20 @@ Before running pallma, ensure you have the following installed:
 
 ## Installation
 
+   **The easiest way to install pallma-guard is either by using pip or pipx,**
+
+   **pip**
+   ```bash
+   pip install pallma-guard
+   ```
+
+   **pipx**
+   ```bash
+   pipx install pallma-guard
+   ```
+
+**Manual installation**
+
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/pallma-ai/pallma.git
@@ -56,10 +76,16 @@ Before running pallma, ensure you have the following installed:
 
 2. **Install dependencies:**
    
-   Install all dependencies (CLI + SDK):
+   Install dependencies (CLI):
    ```bash
-   make install-all
+   make install
    ```
+
+   (Optional) Install dependencies (CLI + SDK):
+   ```
+   make install-sdk
+   ```
+
 3. **Activate the virtual environment:**
    
    ```bash
