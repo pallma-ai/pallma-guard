@@ -138,7 +138,7 @@ make install-cli
 make install-sdk
 
 # Bump version
-make bump_version version=<major|minor|patch>
+make bump-version version=<major|minor|patch>
 ```
 ### Releasing a new version
 
