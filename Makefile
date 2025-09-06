@@ -52,4 +52,4 @@ check-fix: lint-fix format
 .PHONY: bump-version
 bump-version:
 	@:$(if $(version),,$(error version is not set. Run make bump-version version=patch or version=minor or version=major))
-	uv run bump2version $(version)
+	uv run --no-sync bump2version $(version)
