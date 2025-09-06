@@ -1,6 +1,6 @@
 [project]
 name = "pallma-guard"
-version = "0.0.2"
+version = "0.0.3"
 description = "The Security Observability Layer for AI Agents"
 readme = "README.md"
 authors = [
